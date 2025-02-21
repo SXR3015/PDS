@@ -16,6 +16,7 @@ To run the model, follow these steps:
 
  * Open `opt.py` and set <mark> opt.refine </mark>  = True.
  * Run the ` main.py ` to train the diffusion model.
+   
 2.Load the Trained Model
 
 * After training completes, reset <mark> opt.resume_path </mark>  to the path of your best-performing model weights.
@@ -28,3 +29,4 @@ To run the model, follow these steps:
 4.Hyperparameter Configuration
 
 * All other hyperparameters can be configured in ` opt.py `.
+* Image size need to be adjusted by the input size
