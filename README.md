@@ -1,4 +1,4 @@
-# TriRef-DualDiff3D
+# DDM-TMR
 ## Environment Setup
 
 First, install the required dependencies by running:
