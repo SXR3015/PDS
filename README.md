@@ -14,7 +14,7 @@ To run the model, follow these steps:
 
 1.Train the Dual-Modal Diffusion Model
 
- * Open `opt.py` and set <mark> opt.refine </mark>  = True.
+ * Open `opt.py` and set <mark> opt.refine </mark>  = False.
  * Run the ` main.py ` to train the diffusion model.
    
 2.Load the Trained Model
