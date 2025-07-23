@@ -1,4 +1,4 @@
-# SXR3015-TriRef-DualDiff3D
+# TriRef-DualDiff3D
 ## Environment Setup
 
 First, install the required dependencies by running:
