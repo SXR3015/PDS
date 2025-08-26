@@ -78,14 +78,6 @@ def test_epoch(test_loader, model):
             # affine_fMRI = inputs[2]
             target_dti = inputs[3]
             noise_dti = inputs[4]
-            # affine_dti = inputs[5]
-            # generated_images_f2d = noise_scheduler_f2d.generate(
-            #     Ema_.ema_model,
-            #     num_inference_steps=n_inference_timesteps,
-            #     generator=generator,
-            #     eta=1.0,
-            #     batch_size=opt.batch_size,
-            #     mode= 'f2d')
             k=1
             noise_pred = model(sample_resour,sample_dist,
                          target_fMRI.type(torch.FloatTensor).unsqueeze(1).cuda(), \
