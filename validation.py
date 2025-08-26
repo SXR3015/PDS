@@ -61,20 +61,12 @@ def val_epoch(epoch,data_loader,model,criterion,opt,logger, writer,optimizer,\
         #     break
         
         data_time.update(time.time() - end_time)
-        # labels = list(map(int,labels))
-        # inputs= (torch.unsqueeze(input,1) for input in inputs)
         target_fMRI = inputs[0]
         noise_fMRI = inputs[1]
         affine_fMRI = inputs[2]
         target_dti = inputs[3]
         noise_dti = inputs[4]
         affine_dti = inputs[5]
-        # labels = labels.type(torch.FloatTensor)
-        # target_MRI = [target_dti, target_fMRI]
-        # inputs_noise = [noise_fMRI, noise_dti]
-        # affine = [affine_dti, affine_fMRI]
-        # inputs_target = inputs[1].type(torch.FloatTensor).unsqueeze(1)
-        # inputs = [inputs_noise, inputs_target]
         labels = labels.type(torch.FloatTensor)
         target_MRI = [target_dti, target_fMRI ]
         inputs_noise = [noise_fMRI,noise_dti]
@@ -96,19 +88,12 @@ def val_epoch(epoch,data_loader,model,criterion,opt,logger, writer,optimizer,\
             with autocast(enabled=opt.fp16_precision):
                 noise_pred_dti = model(noisy_images_dti.type(torch.FloatTensor).unsqueeze(1).cuda(), \
                                         timesteps)["sample"]
-                # noise_pred_fMRI = model(noisy_images_fMRI.type(torch.FloatTensor).unsqueeze(1).cuda(), \
-                #                         timesteps)["sample"]
-                loss = F.l1_loss(noise_pred_dti, noise_dti.cuda().unsqueeze(1))
-                # loss = F.l1_loss(noise_pred_fMRI, noise_fMRI.cuda().unsqueeze(1)) + \
-                #             F.l1_loss(noise_pred_dti, noise_dti.cuda().unsqueeze(1))
 
             scaler_.scale(loss).backward()
             scaler_.step(optimizer)
             scaler_.update()
             Ema_.update_params(gamma_)
-            # Ema_d2f.update_params(gamma_d2f)
             gamma_ = Ema_.update_gamma(global_step)
-            # gamma_d2f = Ema_d2f.update_gamma(global_step)
             lr_scheduler_.step()
             losses_log += loss.detach().item()
             losses.update(loss.data, inputs[0].size(0))
@@ -123,13 +108,6 @@ def val_epoch(epoch,data_loader,model,criterion,opt,logger, writer,optimizer,\
                         eta=1.0,
                         batch_size=opt.batch_size,
                         mode= 'd2f')
-                    # generated_images_f2d = noise_scheduler_f2d.generate(
-                    #     Ema_.ema_model,
-                    #     num_inference_steps=n_inference_timesteps,
-                    #     generator=generator,
-                    #     eta=1.0,
-                    #     batch_size=opt.batch_size,
-                    #     mode= 'f2d')
                     try:
 
                         index_d2f = np.random.randint(0,generated_images_d2f["sample"].shape[0], size=1)
