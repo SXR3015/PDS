@@ -45,12 +45,6 @@ def plt_image(array):
     figure = plt.figure()
     plt.imshow(array)
     plt.axis('off')
-    # plt.gca().xaxis.set_major_locator(plt.NullLocator())
-    # plt.gca().yaxis.set_major_locator(plt.NullLocator())
-    # buf = io.BytesIO()
-    # plt.savefig(buf, format='png')
-    # buf.seek(0)
-    # image = Image.open(buf)
     plt.close(figure)
     return figure
 def normalize(array):
@@ -107,12 +101,6 @@ def train_epoch(epoch, fold_id, data_loader, model, criterion,\
         target_dti = inputs[3]
         mask_dti = inputs[4]
         affine_dti = inputs[5]
-        # inputs[0] = inputs[0].view(-1,inputs[0].shape[2], inputs[0].shape[3])
-        # inputs[1] = inputs[1].view(-1, inputs[1].shape[2], inputs[1].shape[3])
-        # inputs_target = inputs[1].type(torch.FloatTensor).unsqueeze(1)
-        # inputs = [inputs_noise, inputs_target]
-        # if opt.mode_net == 'pretrained classifier' or opt.mode_net == 'region-specific':
-        #    loss, outputs = model([inputs,labels])
         if opt.mode_net == 'image_generator' :
 
             noise_fMRI = torch.randn(target_fMRI.shape)
@@ -132,11 +120,6 @@ def train_epoch(epoch, fold_id, data_loader, model, criterion,\
             # print(atlas.shape)
             atlas_fmri = interpolate(atlas.unsqueeze(0).unsqueeze(1), [noisy_images_fMRI.shape[1],noisy_images_fMRI.shape[2],noisy_images_fMRI.shape[3]])
             atlas_dti = interpolate(atlas.unsqueeze(0).unsqueeze(1), [noisy_images_dti.shape[1], noisy_images_dti.shape[2],noisy_images_dti.shape[3]])
-            # atlas_fmri = atlas_fmri
-            # atlas_dti = atlas_dti.unsqueeze(0)
-
-
-
             optimizer.zero_grad()
             with (((autocast(enabled=opt.fp16_precision)))):#generate target modality images
                 # try:
@@ -224,10 +207,7 @@ def train_epoch(epoch, fold_id, data_loader, model, criterion,\
             # scaler_.update()
             Ema_.update_params(gamma_)
             # Ema_d2f.update_params(gamma_d2f)
-            gamma_ = Ema_.update_gamma(global_step)
-            # gamma_d2f = Ema_d2f.update_gamma(global_step)
-            # if opt.use_clip_grad:
-            #     clip_grad_norm_(model.parameters(), 1.0)
+            gamma_ = Ema_.update_gamma(global_step))
             lr_scheduler_.step()
             losses_log += loss.detach().item()
             if opt.mode_net == "pretrained classifier" or opt.mode_net == 'region-specific':
@@ -260,8 +240,6 @@ def train_epoch(epoch, fold_id, data_loader, model, criterion,\
                                           opt.category, str(fold_id), opt.features, opt.n_epochs, i))
                     if not os.path.exists(save_dir):
                         os.makedirs(save_dir)
-                    # if opt.pretrain ==True:
-                    #     epoch_save = epoch +3
                     save_path = OsJoin(save_dir,
                                        '{}{}_weights_fold{}_epoch{}_step{}.pth'.format(opt.model_name, opt.model_depth,
                                                                                 fold_id, epoch,i))
