@@ -161,13 +161,6 @@ def train_epoch(epoch, fold_id, data_loader, model, criterion,\
                         eta=1.0,
                         batch_size=opt.batch_size,
                         mode='f2d')
-                    # generated_images_f2d = noise_scheduler_f2d.generate(
-                    #     Ema_.ema_model,
-                    #     num_inference_steps=n_inference_timesteps,
-                    #     generator=generator,
-                    #     eta=1.0,
-                    #     batch_size=opt.batch_size,
-                    #     mode= 'f2d')
                     try:
 
                         index_d2f = np.random.randint(0, generated_images["sample_fmri"].shape[0], size=1)
