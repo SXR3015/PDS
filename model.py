@@ -17,38 +17,6 @@ def generate_model(opt):
         assert opt.model_depth in [10, 18, 34, 50, 101, 152, 200]
 
         if opt.model_depth == 10:
-            # denoisor = unet.UNet(
-            #     in_channel = opt.in_channel,
-            #     out_channel = opt.out_channel,
-            #     norm_groups = opt.norm_groups,
-            #     inner_channel = opt.inner_channel,
-            #     channel_mults = opt.channel_multiplier,
-            #     attn_res = opt.attn_res,
-            #     res_blocks = opt.res_blocks,
-            #     dropout = opt.drop_rate,
-            #     # image_size_fmri = opt.image_size_fMRI,
-            #     # image_size_dti = opt.image_size_DTI,
-            #     version=opt.version
-            #      )
-            # denoisor_fn = unet.UNet(
-            #     in_channel=2,
-            #     out_channel=1,
-            #     norm_groups=opt.norm_groups,
-            #     inner_channel=32,
-            #     channel_mults=opt.channel_multiplier,
-            #     attn_res=opt.attn_res,
-            #     res_blocks=opt.res_blocks,
-            #     dropout=opt.drop_rate,
-            #     image_size_fmri=opt.image_size_fMRI,
-            #     image_size_DTI=opt.image_size_fMRI,
-            #     version=opt.version
-            #      )
-            # model = my_model.GaussianDiffusion(denoisor=denoisor
-            #                                    # image_size_fMRI=opt.image_size_fmri,
-            #                                    # image_size_DTI=opt.image_size_dti,
-            #                                    # schedule_opt=[opt.schedule_start,opt.schedule_end],
-            #                                    # denoisor_fn=None
-            #                                      )
             if opt.refine == True:
                 model = unet_refine.UNet(1, hidden_dims=[64, 128, 256, 512],
                          use_flash_attn=True)
