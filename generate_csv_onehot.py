@@ -421,14 +421,14 @@ if not os.path.exists(csv_save_path):
     os.makedirs(csv_save_path)
 
 for i in range(1, n_fold+1):
-    with open(OsJoin(csv_save_path, 'train_fold%s.csv'%i), 'w', newline='') as f:  # 设置文件对象
+    with open(OsJoin(csv_save_path, 'train_fold%s.csv'%i), 'w', newline='') as f:  
         f_csv = csv.writer(f)
         f_csv.writerows(names2.get('train_list_fold%s'%i))
-    with open(OsJoin(csv_save_path, 'val_fold%s.csv'%i), 'w', newline='') as f:  # 设置文件对象
+    with open(OsJoin(csv_save_path, 'val_fold%s.csv'%i), 'w', newline='') as f:  
         f_csv = csv.writer(f)
         f_csv.writerows(names2.get('val_list_fold%s'%i))
 
 
-with open(OsJoin(csv_save_path, 'test.csv'), 'w', newline='') as f:  # 设置文件对象
+with open(OsJoin(csv_save_path, 'test.csv'), 'w', newline='') as f:  
     f_csv = csv.writer(f)
     f_csv.writerows(test_list)
