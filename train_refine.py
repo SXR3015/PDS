@@ -35,32 +35,12 @@ best performance at 83 epoch
 def train_epoch_refine(epoch, fold_id, data_loader, model, criterion,\
                 opt, epoch_logger, batch_logger, writer,optimizer):
     print('train at epoch {}'.format(epoch))
-
-    # generator = torch.manual_seed(0)
-    # generated_images = noise_scheduler_.generate(
-    #     model_pretrain,
-    #     num_inference_steps=n_inference_timesteps,
-    #     generator=generator,
-    #     eta=1.0,
-    #     batch_size=opt.batch_size,
-    #     mode='f2d')
     '''
     multi-process generation will lead to noise results output.
     '''
-    # generated_images_f2d = noise_scheduler_f2d.generate(
-    #     Ema_.ema_model,
-    #     num_inference_steps=n_inference_timesteps,
-    #     generator=generator,
-    #     eta=1.0,
-    #     batch_size=opt.batch_size,
-    #     mode= 'f2d')
     '''
     clone() method lead to revise input tensor
     '''
-
-
-
-
     model.train()
 
     batch_time = AverageMeter()
@@ -120,35 +100,15 @@ def train_epoch_refine(epoch, fold_id, data_loader, model, criterion,\
 
         # torch.cuda.empty_cache()
         data_time.update(time.time()-end_time)
-        # if i %100 == 0 or opt.resume_path !='':
-
-        # if opt.n_classes == 3:
-        #     labels = labels.repeat(1,inputs[0].shape[1]).view(-1,3)
-        # else:
-        #     labels = labels.repeat(1, inputs[0].shape[1]).view(-1, 2)
         target_fMRI = inputs[0]
         mask_fMRI = inputs[1]
         affine_fMRI = inputs[2]
         target_dti = inputs[3]
         mask_dti = inputs[4]
         affine_dti = inputs[5]
-        # inputs[0] = inputs[0].view(-1,inputs[0].shape[2], inputs[0].shape[3])
-        # inputs[1] = inputs[1].view(-1, inputs[1].shape[2], inputs[1].shape[3])
-        # inputs_target = inputs[1].type(torch.FloatTensor).unsqueeze(1)
-        # inputs = [inputs_noise, inputs_target]
-        # if opt.mode_net == 'pretrained classifier' or opt.mode_net == 'region-specific':
-        #    loss, outputs = model([inputs,labels])
-
-
-        # atlas_fmri = atlas_fmri
-        # atlas_dti = atlas_dti.unsqueeze(0)
-        # try:
-
         gen_images = model(sample_resour,sample_dist,
                          target_fMRI.type(torch.FloatTensor).unsqueeze(1).cuda(), \
                                target_dti.type(torch.FloatTensor).unsqueeze(1).cuda(),i, model_pretrain)
-        # except:
-        #     continue
         loss = gen_images['loss']
         optimizer.zero_grad()
         loss.backward()
@@ -192,13 +152,6 @@ def train_epoch_refine(epoch, fold_id, data_loader, model, criterion,\
                 epoch, i)
                 nib.Nifti1Image((target_dti[index] .squeeze().detach().cpu().numpy() + 1) * 0.5,
                                 affine_dti[index] .squeeze()).to_filename(tar_path)
-                # except:
-                #     print(index_d2f)
-                #     print(gen_images['gen_dti'].shape)
-                #     continue
-            # gamma_d2f = Ema_d2f.update_gamma(global_step)
-            # if opt.use_clip_grad:
-            #     clip_grad_norm_(model.parameters(), 1.0)
 
         losses_log += loss.detach().item()
         if opt.mode_net == "pretrained classifier" or opt.mode_net == 'region-specific':
@@ -231,8 +184,6 @@ def train_epoch_refine(epoch, fold_id, data_loader, model, criterion,\
                                       opt.category, str(fold_id), opt.features, opt.n_epochs, i))
                 if not os.path.exists(save_dir):
                     os.makedirs(save_dir)
-                # if opt.pretrain ==True:
-                #     epoch_save = epoch +3
                 save_path = OsJoin(save_dir,
                                    '{}{}_weights_fold{}_epoch{}_step{}.pth'.format(opt.model_name, opt.model_depth,
                                                                             fold_id, epoch,i))
@@ -285,41 +236,10 @@ def train_epoch_refine(epoch, fold_id, data_loader, model, criterion,\
         if i % writer_index == 0:
             writer.add_scalar('train/loss', losses_log / (i + 1), i + (epoch - 1) * len(data_loader))
             writer.add_scalar('train/lr', loss.detach().item(), i + (epoch - 1) * len(data_loader))
-                # fig, ax
-                # figure = plt.figure()
-                # plt.imshow(gen_smaple)
-                # plt.axis('off')
-                # plt.gca().xaxis.set_major_locator(plt.NullLocator())
-                # plt.gca().yaxis.set_major_locator(plt.NullLocator())
-                # writer.add_figure('train/gen_image', plt_image(gen_smaple), i + (epoch - 1) * len(data_loader))
-                # plt.close()
-                # writer.add_figure('train/gen_target_image', plt_image(gen_target_smaple), i + (epoch - 1) * len(data_loader))
-                # plt.close()
-                # writer.add_figure('train/sub_image', plt_image(sub_sample), i + (epoch - 1) * len(data_loader))
-                # plt.close()
-                # writer.add_figure('train/noise_image', plt_image(noise_smaple), i + epoch)
-                # plt.close()
-                # writer.add_figure('train/target_image', plt_image(target_smaple), i + (epoch - 1) * len(data_loader))
-                # plt.close()
-
+                
         batch_time.update(time.time()-end_time)
         end_time = time.time()
 
-
-
-        # _, pred = outputs.topk(k=1, dim=1, largest=True)
-        # pred_arr = torch.cat([pred_arr, pred], dim=0)
-        # _, labels_ = labels.topk(k=1, dim=1, largest=True)
-        # labels_arr = torch.cat([labels_arr, labels_.cuda().squeeze()], dim=0)
-    # print('prediction :', end=' ')
-    # for i in range(4, len(pred_arr)):
-    #     print('%d\t'%(pred_arr[i]), end='')
-    # print('\nlabel    :', end=' ')
-    # for i in range(4, len(labels_arr)):
-    #     print('%d\t'%(labels_arr[i]), end='')
-    # print('\n')
-    # labels_arr = torch.empty(4).cuda()
-    # pred_arr = torch.empty(4, 1).cuda()
     try:
         epoch_logger.log({
             'epoch': epoch,
