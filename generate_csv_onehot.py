@@ -45,11 +45,6 @@ def search_near_session(sub_fea, session_index, session_names):
             index = session_index[i]
     return index
 
-
-
-
-
-    # files_list.index(sub)
 for filename in os.listdir(least_subs_name):
     if '_diffusion' in filename:
         sub = filename.split('_diffusion')[0]
@@ -318,29 +313,7 @@ for sub in Subs:
                                         label_health.append([1, 0])
                                     HC_num = HC_num + 1
                                 else :#
-                                        # if sub_MMSE >= 27.0:
-                                        #     data_health.append(OsJoin(root, feature, sub_fea))
-                                        #     if opt.n_classes == 4 and opt.category == 'HC_SCD_MCI_AD':
-                                        #         label_health.append([1, 0, 0, 0])
-                                        #     elif opt.n_classes == 3 and (
-                                        #             opt.category == 'HC_MCI_SCD' or opt.category == 'HC_MCI_AD'):
-                                        #         label_health.append([1, 0, 0])
-                                        #     elif opt.n_classes == 2 and (
-                                        #             opt.category == 'HC_MCI' or opt.category == 'HC_SCD' or opt.category == 'HC_AD'):
-                                        #         label_health.append([1, 0])
-                                        #     HC_num = HC_num + 1
-                                        #     # print(HC_num)
-                                        # elif sub_MMSE <= 21.0:
-                                        #     data_AD.append(OsJoin(root, feature, sub_fea))
-                                        #     if opt.n_classes == 4 and opt.category == 'HC_SCD_MCI_AD':
-                                        #         label_AD.append([0, 0, 0, 1])
-                                        #     elif opt.n_classes == 3 and opt.category == 'HC_MCI_AD':
-                                        #         label_AD.append([0, 0, 1])
-                                        #     elif opt.n_classes == 2 and (
-                                        #             'MCI_AD' in opt.category or 'HC_AD' in opt.category):
-                                        #         label_AD.append([0, 1])
-                                        #     AD_num = AD_num + 1
-                                        # else:
+                                       
                                             data_MCI.append(OsJoin(root, feature, sub_fea))
                                             path_diff = os.path.join(root, feature, sub_fea)
                                             if 'diffusion' in sub_fea:
@@ -365,73 +338,9 @@ for sub in Subs:
                                 print(sub_category)
                                 print(opt.category)
                                 continue
-                        # else:
-                        #         if sub_MMSE is not None:#
-                        #                 if sub_MMSE >= 27:
-                        #                     data_health.append(OsJoin(root, feature, sub_fea))
-                        #                     if opt.n_classes == 4 and opt.category == 'HC_SCD_MCI_AD':
-                        #                         label_health.append([1, 0, 0, 0])
-                        #                     elif opt.n_classes == 3 and (
-                        #                             opt.category == 'HC_MCI_SCD' or opt.category == 'HC_MCI_AD'):
-                        #                         label_health.append([1, 0, 0])
-                        #                     elif opt.n_classes == 2 and (
-                        #                             opt.category == 'HC_MCI' or opt.category == 'HC_SCD' or opt.category == 'HC_AD'):
-                        #                         label_health.append([1, 0])
-                        #                     HC_num = HC_num + 1
-                        #                     print(HC_num)
-                        #                 elif sub_MMSE <= 21:
-                        #                     data_AD.append(OsJoin(root, feature, sub_fea))
-                        #                     if opt.n_classes == 4 and opt.category == 'HC_SCD_MCI_AD':
-                        #                         label_AD.append([0, 0, 0, 1])
-                        #                     elif opt.n_classes == 3 and opt.category == 'HC_MCI_AD':
-                        #                         label_AD.append([0, 0, 1])
-                        #                     elif opt.n_classes == 2 and (
-                        #                             'MCI_AD' in opt.category or 'HC_AD' in opt.category):
-                        #                         label_AD.append([0, 1])
-                        #                     AD_num = AD_num + 1
-                        #                 else:
-                        #                     data_MCI.append(OsJoin(root, feature, sub_fea))
-                        #                     MCI_num = MCI_num + 1
-                        #                     if opt.n_classes == 4 and opt.category == 'HC_SCD_MCI_AD':
-                        #                         label_MCI.append([0,0,1,0])
-                        #                     elif opt.n_classes == 3 and opt.category == 'HC_SCD_MCI' :
-                        #                         label_MCI.append([0,0,1])
-                        #                     elif opt.n_classes == 3 and opt.category == 'HC_MCI_AD' :
-                        #                         label_MCI.append([0,1,0])
-                        #                     elif opt.n_classes == 2 and 'SCD_MCI' in opt.category:
-                        #                         label_MCI.append([0,1])
-                        #                     elif opt.n_classes == 2 and 'HC_MCI' in opt.category:
-                        #                         label_MCI.append([0,1])
-                        #         else:
-                        #                 data_MCI.append(OsJoin(root, feature, sub_fea))
-                        #                 MCI_num = MCI_num + 1
-                        #                 if opt.n_classes == 4 and opt.category == 'HC_SCD_MCI_AD':
-                        #                     label_MCI.append([0, 0, 1, 0])
-                        #                 elif opt.n_classes == 3 and opt.category == 'HC_SCD_MCI':
-                        #                     label_MCI.append([0, 0, 1])
-                        #                 elif opt.n_classes == 3 and opt.category == 'HC_MCI_AD':
-                        #                     label_MCI.append([0, 1, 0])
-                        #                 elif opt.n_classes == 2 and 'SCD_MCI' in opt.category:
-                        #                     label_MCI.append([0, 1])
-                        #                 elif opt.n_classes == 2 and 'HC_MCI' in opt.category:
-                        #                     label_MCI.append([0, 1])
-                        #     data_MCI.append(OsJoin(root, feature, sub_fea))
-                        #     MCI_num = MCI_num + 1
-                        #     if opt.n_classes == 4 and opt.category == 'HC_SCD_MCI_AD':
-                        #         label_SCD.append([0, 0, 1, 0])
-                        #     elif opt.n_classes == 3 and opt.category == 'HC_SCD_MCI':
-                        #         label_SCD.append([0, 0, 1])
-                        #     elif opt.n_classes == 3 and opt.category == 'HC_MCI_AD':
-                        #         label_SCD.append([0, 1, 0])
-                        #     elif opt.n_classes == 2 and 'SCD_MCI' in opt.category:
-                        #         label_SCD.append([0, 1])
-                        #     elif opt.n_classes == 2 and 'HC_MCI' in opt.category:
-                        #         label_SCD.append([0, 1])
 
             else:
                 continue
-# if csv_contain == True:
-#     fea_num = fea_num-1
 np.random.seed(opt.manual_seed)
 if len(data_health) > 0:
     data_health = np.array(data_health).reshape(int(HC_num), 2)
