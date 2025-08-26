@@ -90,16 +90,6 @@ def fashion_scatter(x,colors):
       handles = [plt.Line2D([0], [0], marker='o', color='w', label=str(i),
                             markersize=10, markerfacecolor=palette[i]) for i in range(num_class)]
       ax.legend(handles=handles, loc='upper right', title='Classes')
-      # for i in range(num_class):
-      #     xtext, ytext = np.median(x[colors == i], axis=0)
-      #     txt = ax.text(xtext, ytext, str(i),fontsize=24)
-      #     txt.set_path_effects([
-      #         PathEffects.Stroke(linewidth=5, foreground='white'),
-      #         PathEffects.Normal()
-      #     ]
-      #
-      #     )
-      #     txts.append(txt)
       return f,ax,sc,txts
 
 for i in range(0,173):
