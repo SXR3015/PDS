@@ -54,26 +54,7 @@ def generate_model(opt):
             if 'module.' in key:
                 checkpoint[key.replace('module.', '')] = checkpoint[key]
                 del checkpoint[key]
-        # opt.arch = '{}-{}'.format(opt.model_name, opt.model_depth)
-        # assert opt.arch == checkpoint['arch']
-        # model.load_state_dict(checkpoint['state_dict'])
         model.load_state_dict(checkpoint)
         print('loading pretrained model {}'.format(opt.resume_path))
         print('Load Model successfully')
-        # pretrain = torch.load(opt.pretrain_path)
-        # pretrain_dict = {k: v for k, v in pretrain['state_dict'].items() if k in net_dict.keys()}
-        #
-        # net_dict.update(pretrain_dict)
-        # model.load_state_dict(net_dict)
-        #
-        # new_parameters = []
-        # for pname, p in model.named_parameters():
-        #     for layer_name in opt.new_layer_names:
-        #         if pname.find(layer_name) >= 0:
-        #             new_parameters.append(p)
-        #             break
-
-        # except:
-        #     print('Load Model unsuccessfully')
-
     return model, model.parameters()
