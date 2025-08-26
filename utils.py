@@ -86,24 +86,6 @@ def calculate_recall(outputs, labels, opt):
         TN = ((pred.data == 0) & (labels.data == 0)).cpu().float().sum().data
         FN = (((pred.data == 0) & (labels.data == 1)) | (
                     (pred.data == 0) & (labels.data == 2))| ((pred.data == 1) & (labels.data == 2)) ).cpu().float().sum().data
-        #
-        # FP = ((pred.data == 1) & (labels.data == 0)).cpu().float().sum().data
-        # p = TP / (TP + FP)  #precision
-        # if sum(labels[0].data) == 0: # all sampes are negative
-        #     TP = 1
-        #     FN = 0
-        # label_0 = 0
-        # for label in labels[0]: # no negative labels
-        #     if label == 0:
-        #         label_0 = label_0 + 1
-        #     else:
-        #         continue
-        # if label_0 == 0:
-        #     TN = 1
-        #     FP = 0
-        #
-        # FP = ((pred.data == 1) & (labels.data == 0)).cpu().float().sum().data
-        # p = TP / (TP + FP)  #precision
         if TP + FN == 0:
             r = 0
         else:
@@ -128,44 +110,14 @@ def calculate_recall(outputs, labels, opt):
             sp = torch.tensor(0).float()
         else:
             sp = TN / (TN + FP)
-        # clf = LogisticRegression(solver="liblinear").fit(np.array(outputs.cpu().float().data), np.array(labels.cpu().float().data))
-        # auc = roc_auc_score(np.array(labels.cpu().float().data, clf.predict_proba(np.array(outputs.cpu().float().data)), multi_class='ovr'))
-        #        clf = MultiOutputClassifier(clf).fit(np.array(outputs.cpu().float().data), np.array(labels.cpu().float().data))
-        #        y_pred = clf.predict_proba(np.array(labels.cpu().float().data))
-        #        auc = roc_auc_score(labels.cpu().float().data, outputs.cpu().float().data)
-        # F1 = 2 * r * p / (r + p)
+    
         return r, p, f1, sen, sp
-    # elif opt.n_classes == 2 and 'HC' in opt.category:
-    #     TP = ((pred.data == 1) & (labels.data == 1)).cpu().float().sum().data
-    #     #TN = ((pred.data == 0) & (labels.data == 0)).cpu().float().sum().data
-    #     FN = (((pred.data == 0) & (labels.data == 1))).cpu().float().sum().data
-    #     #
-    #     #FP = ((pred.data == 1) & (labels.data == 0)).cpu().float().sum().data
-    #     #p = TP / (TP + FP)  #precision
-    #     r = TP / (TP + FN)  #recall
-    # F1 = 2 * r * p / (r + p)
-    # return r
     else:
         TP = ((pred.data == 1) & (labels.data == 1)).cpu().float().sum().data
         FP = ((pred.data == 1) & (labels.data == 0)).cpu().float().sum().data
         TN = ((pred.data == 0) & (labels.data == 0)).cpu().float().sum().data
         # TN = ((pred.data == 0) & (labels.data == 0)).cpu().float().sum().data
         FN = (((pred.data == 0) & (labels.data == 1))).cpu().float().sum().data
-        # if sum(labels[0].data) == 0:
-        #     TP = 1
-        #     FN = 0
-        # label_0 = 0
-        # for label in labels[0]:
-        #     if label == 0:
-        #         label_0 = label_0 + 1
-        #     else:
-        #         continue
-        # if label_0 == 0:
-        #     TN = 1
-        #     FP = 0
-        #
-        # FP = ((pred.data == 1) & (labels.data == 0)).cpu().float().sum().data
-        # p = TP / (TP + FP)  #precision
         if TP + FN == 0:
             r = 0
         else:
@@ -190,15 +142,7 @@ def calculate_recall(outputs, labels, opt):
             sp = torch.tensor(0).float()
         else:
             sp = TN / (TN + FP)
-            # sp = torch.tensor(sp).float()
-        #        auc = roc_auc_score(np.array(labels.cpu().float().data), np.array(outputs.cpu().float().data))
-        #        clf = LogisticRegression(solver="liblinear", random_state=0).fit(outputs.cpu().float().data, (labels.view(len(labels), -1)).cpu().float().data)
-        #        auc=roc_auc_score(np.array(labels.cpu().float().data), clf.predict_proba(np.array(outputs.cpu().float().data))[:, 1])
-        # F1 = 2 * r * p / (r + p)
         return r, p, f1, sen, sp
-# def calculate_best_metric(epoch_metric):
-#     best_metric = max(epoch_metric[:,1])
-#     return
 def OsJoin(*args):
     p = os.path.join(*args)
     p = p.replace('\\', '/')
@@ -262,43 +206,6 @@ def generate_neurodegeneration(gen,gen_target,labels,opt,epoch, mode='train'):
         save_mat_png(HC_target, opt, epoch, mode, mode_array='target', category='HC')
         save_mat_png(MCI_target, opt, epoch, mode, mode_array='target', category='MCI')
         save_mat_png(SCD_target, opt, epoch, mode, mode_array='target', category='SCD')
-        # HC_dict = {"HC_degenration": HC_degeneration.detach().cpu().numpy(), "label": "HC_degeneration"}
-        # sio.savemat(os.path.join(save_path, 'HC_degenration_epoch%s.mat'%epoch), HC_dict)
-        # MCI_dict = {"MCI_degenration": MCI_degeneration.detach().cpu().numpy(), "label": "MCI_degeneration"}
-        # sio.savemat(os.path.join(save_path, 'MCI_degenration_epoch%s.mat'%epoch), MCI_dict)
-        # SCD_dict = {"SCD_degenration": SCD_degeneration.detach().cpu().numpy(), "label": "SCD_degeneration"}
-        # sio.savemat(os.path.join(save_path, 'SCD_degenration_epoch%s.mat'%epoch), SCD_dict)
-        # save_name = OsJoin(save_path, '%s_epoch%d_HC_degeration.png' % (mode, epoch))
-        # plt.imshow(HC_degeneration.detach().cpu().numpy())
-        # plt.axis('off')
-        # plt.gca().xaxis.set_major_locator(plt.NullLocator())
-        # plt.gca().yaxis.set_major_locator(plt.NullLocator())
-        # plt.savefig(save_name)
-        # plt.close()
-        # save_name = OsJoin(save_path, '%s_epoch%d_MCI_degeration.png' % (mode,epoch))
-        # plt.imshow(MCI_degeneration.detach().cpu().numpy())
-        # plt.axis('off')
-        # plt.gca().xaxis.set_major_locator(plt.NullLocator())
-        # plt.gca().yaxis.set_major_locator(plt.NullLocator())
-        # plt.savefig(save_name)
-        # plt.close()
-        # save_name = OsJoin(save_path, '%s_epoch%d_SCD_degeration.png' % (mode,epoch))
-        # plt.imshow(SCD_degeneration.detach().cpu().numpy())
-        # plt.axis('off')
-        # plt.gca().xaxis.set_major_locator(plt.NullLocator())
-        # plt.gca().yaxis.set_major_locator(plt.NullLocator())
-        # plt.savefig(save_name)
-        # plt.close()
-        # for i in range(labels.shape[0]):
-        #    if labels_[i] == 0:
-        #        HC_num = HC_num +1
-        #        HC_degeneration = HC_degeneration + subtract_label[i]
-        #    elif labels_[i] == 1:
-        #        SCD_degeneration = SCD_degeneration + subtract_label[i]
-        #    elif labels_[i] == 2:
-        #        MCI_degeneration = MCI_degeneration + subtract_label[i]
-
-        # return HC_degeneration,SCD_degeneration,MCI_degeneration
     elif opt.n_classes == 2 and opt.category =='HC_SCD':
         index_HC =torch.where(labels_==0)[0]
         index_SCD = torch.where(labels_ == 1)[0]
@@ -314,24 +221,6 @@ def generate_neurodegeneration(gen,gen_target,labels,opt,epoch, mode='train'):
         save_mat_png(SCD_gen, opt, epoch, mode, mode_array='gen', category='SCD')
         save_mat_png(HC_target, opt, epoch, mode, mode_array='target', category='HC')
         save_mat_png(SCD_target, opt, epoch, mode, mode_array='target', category='SCD')
-        # HC_dict = {"HC_degenration": HC_degeneration.detach().cpu().numpy(), "label": "HC_degeneration"}
-        # sio.savemat(os.path.join(save_path, 'HC_degenration_epoch%s.mat')%epoch, HC_dict)
-        # SCD_dict = {"SCD_degenration": SCD_degeneration.detach().cpu().numpy(), "label": "SCD_degeneration"}
-        # sio.savemat(os.path.join(save_path, 'SCD_degenration_epoch%s.mat')%epoch, SCD_dict)
-        # save_name = OsJoin(save_path, '%s_epoch%d_HC_degeration.png' % (mode, epoch))
-        # plt.imshow(HC_degeneration.detach().cpu().numpy())
-        # plt.axis('off')
-        # plt.gca().xaxis.set_major_locator(plt.NullLocator())
-        # plt.gca().yaxis.set_major_locator(plt.NullLocator())
-        # plt.savefig(save_name)
-        # plt.close()
-        # save_name = OsJoin(save_path, '%s_epoch%d_SCD_degeration.png' % (mode,epoch))
-        # plt.imshow(SCD_degeneration.detach().cpu().numpy())
-        # plt.axis('off')
-        # plt.gca().xaxis.set_major_locator(plt.NullLocator())
-        # plt.gca().yaxis.set_major_locator(plt.NullLocator())
-        # plt.savefig(save_name)
-        # plt.close()
     elif opt.n_classes == 2 and opt.category == 'HC_MCI':
         index_HC = torch.where(labels_ == 0)[0]
         index_MCI = torch.where(labels_ == 1)[0]
@@ -347,24 +236,6 @@ def generate_neurodegeneration(gen,gen_target,labels,opt,epoch, mode='train'):
         save_mat_png(MCI_gen, opt, epoch, mode, mode_array='gen', category='MCI')
         save_mat_png(HC_target, opt, epoch, mode, mode_array='target', category='HC')
         save_mat_png(MCI_target, opt, epoch, mode, mode_array='target', category='MCI')
-        # HC_dict = {"HC_degenration": HC_degeneration.detach().cpu().numpy(), "label": "HC_degeneration"}
-        # sio.savemat(os.path.join(save_path, 'HC_degenration_epoch%s.mat'%epoch), HC_dict)
-        # MCI_dict = {"MCI_degenration": MCI_degeneration.detach().cpu().numpy(), "label": "MCI_degeneration"}
-        # sio.savemat(os.path.join(save_path, 'MCI_degenration_epoch%s.mat'%epoch), MCI_dict)
-        # save_name = OsJoin(save_path, '%s_epoch%d_HC_degeration.png' % (mode, epoch))
-        # plt.imshow(HC_degeneration.detach().cpu().numpy())
-        # plt.axis('off')
-        # plt.gca().xaxis.set_major_locator(plt.NullLocator())
-        # plt.gca().yaxis.set_major_locator(plt.NullLocator())
-        # plt.savefig(save_name)
-        # plt.close()
-        # save_name = OsJoin(save_path, '%s_epoch%d_MCI_degeration.png' % (mode,epoch))
-        # plt.imshow(MCI_degeneration.detach().cpu().numpy())
-        # plt.axis('off')
-        # plt.gca().xaxis.set_major_locator(plt.NullLocator())
-        # plt.gca().yaxis.set_major_locator(plt.NullLocator())
-        # plt.savefig(save_name)
-        # plt.close()
 
     elif opt.n_classes == 2 and opt.category == 'MCI_SCD':
         index_SCD = torch.where(labels_ == 0)[0]
@@ -381,22 +252,3 @@ def generate_neurodegeneration(gen,gen_target,labels,opt,epoch, mode='train'):
         save_mat_png(SCD_gen, opt, epoch, mode, mode_array='gen', category='SCD')
         save_mat_png(MCI_target, opt, epoch, mode, mode_array='target', category='MCI')
         save_mat_png(SCD_target, opt, epoch, mode, mode_array='target', category='SCD')
-        # SCD_dict = {"SCD_degenration": SCD_degeneration.detach().cpu().numpy(), "label": "SCD_degeneration"}
-        # sio.savemat(os.path.join(save_path, 'SCD_degenration_epoch%s.mat'%epoch), SCD_dict)
-        # MCI_dict = {"MCI_degenration": MCI_degeneration.detach().cpu().numpy(), "label": "MCI_degeneration"}
-        # sio.savemat(os.path.join(save_path, 'MCI_degenration_epoch%s.mat'%epoch), MCI_dict)
-        # save_name = OsJoin(save_path, '%s_epoch%d_SCD_degeration.png' % (mode, epoch))
-        # plt.imshow(SCD_degeneration.detach().cpu().numpy())
-        # plt.axis('off')
-        # plt.gca().xaxis.set_major_locator(plt.NullLocator())
-        # plt.gca().yaxis.set_major_locator(plt.NullLocator())
-        # plt.savefig(save_name)
-        # plt.close()
-        # save_name = OsJoin(save_path, '%s_epoch%d_MCI_degeration.png' % (mode, epoch))
-        # plt.imshow(MCI_degeneration.detach().cpu().numpy())
-        # plt.axis('off')
-        # plt.gca().xaxis.set_major_locator(plt.NullLocator())
-        # plt.gca().yaxis.set_major_locator(plt.NullLocator())
-        # plt.savefig(save_name)
-        # plt.close()
-        # return HC_degeneration,SCD_degeneration
