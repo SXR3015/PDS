@@ -146,11 +146,7 @@ def train_epoch(epoch, fold_id, data_loader, model, criterion,\
                     atlas_fmri, atlas_dti = map(lambda t: repeat(t, '1 ... -> b ...', b=noise_pred['sample_dti'].shape[0]),
                                                 (atlas_fmri, atlas_dti)
                                                  )
-                     # = model(noisy_images_fMRI.type(torch.FloatTensor).unsqueeze(1).cuda(), \
-                     #                        noisy_images_dti.type(torch.FloatTensor).unsqueeze(1).cuda(),\
-                     #                        timesteps)["sample"]
-                    # loss_d2f = F.l1_loss(noise_pred_fMRI, noise_fMRI.cuda().unsqueeze(1))
-                    # loss_f2d = F.l1_loss(noise_pred_dti, noise_dti.cuda().unsqueeze(1))
+
                     loss_global =  F.l1_loss(noise_pred['sample_dti'], noise_dti.cuda().unsqueeze(1)) +\
                             F.l1_loss(noise_pred['sample_fmri'], noise_fMRI.cuda().unsqueeze(1))
 
@@ -158,8 +154,7 @@ def train_epoch(epoch, fold_id, data_loader, model, criterion,\
                     loss_network = F.l1_loss(noise_pred['sample_dti']*atlas_dti.cuda(), noise_dti.cuda().unsqueeze(1)*atlas_dti.cuda()) +\
                             F.l1_loss(noise_pred['sample_fmri']*atlas_fmri.cuda() , noise_fMRI.cuda().unsqueeze(1)*atlas_fmri.cuda() )
                     loss = loss_global + loss_network
-            #
-            #
+
                     if opt.perceptual_loss == True:
                         perceptual_loss_dti = perceptual_loss(noise_pred['sample_dti'], noise_dti.cuda().unsqueeze(1))
                         perceptual_loss_fmri = perceptual_loss(noise_pred['sample_fmri'],
@@ -172,45 +167,6 @@ def train_epoch(epoch, fold_id, data_loader, model, criterion,\
                         perceptual_loss_net = perceptual_loss_fmri_net + perceptual_loss_dti_net
                         loss = loss_global + loss_network + perceptual_loss_global + perceptual_loss_net
                         loss_pe = perceptual_loss_net + perceptual_loss_global
-            #         # else:
-            #         #     '''
-            #         #     hard to model convergence for subtract the noisy images and pred niose
-            #         #     '''
-            #         #     # loss = loss_global + loss_network
-            #         #     # with torch.no_grad():
-            #         #     loss_l1 = loss_global + loss_network
-            #         #     # print(noise_scheduler_.num_train_timesteps)
-            #         #     # print(timesteps)
-            #         #     # pred_dti = noise_scheduler_.subtract_noise(noisy_images_dti.type(torch.FloatTensor).unsqueeze(1).cuda(), noise_pred['sample_dti'], timesteps.cuda())
-            #         #     # print(pred_dti.shape)
-            #         #     # pred_fmri = noise_scheduler_.subtract_noise( noisy_images_fMRI.type(torch.FloatTensor).unsqueeze(1).cuda(), noise_pred['sample_fmri'], timesteps.cuda())
-            #         #     pred_fmri = noisy_images_fMRI.type(torch.FloatTensor).unsqueeze(1).cuda() - noise_pred['sample_fmri']
-            #         #     pred_dti = noisy_images_dti.type(torch.FloatTensor).unsqueeze(1).cuda() - noise_pred['sample_dti']
-            #         #
-            #         #     # perceptual_loss_dti = perceptual_loss(pred_dti.cuda(), target_dti.cuda().unsqueeze(1))
-            #         #     # perceptual_loss_fmri = perceptual_loss(pred_fmri.cuda(), target_fMRI.cuda().unsqueeze(1))
-            #         #     # loss_mse = perceptual_loss_dti + perceptual_loss_fmri
-            #         #     pred_dti_r = interpolate(pred_dti, [pred_fmri.shape[2], pred_fmri.shape[3], pred_fmri.shape[4]])
-            #         #     target_dti_r = interpolate(target_dti.cuda().unsqueeze(1), [pred_fmri.shape[2], pred_fmri.shape[3], pred_fmri.shape[4]])
-            #         #     scale_dti_div = interpolate(pred_dti / target_dti.cuda().unsqueeze(1), \
-            #         #                                 [pred_fmri.shape[2], pred_fmri.shape[3], pred_fmri.shape[4]])
-            #         #     corr_or = (target_fMRI.cuda().unsqueeze(1)*target_dti_r) / (target_fMRI.cuda().unsqueeze(1)+target_dti_r)
-            #         #     loss_mse = F.l1_loss(scale_dti_div
-            #         #         ,(pred_fmri/target_fMRI.cuda().unsqueeze(1)) )
-            #         #     corr_gen = (pred_fmri*pred_dti_r) / (pred_fmri+pred_dti_r)
-            #         #     loss_corr = F.l1_loss(corr_or , corr_gen) * 0.1
-            #         #
-            #         # # if loss < 0.05: # if loss too mall, the backward process cause error
-            #         # #     print('loss is two small')
-            #         # #     continue
-            #         #
-            #         #
-            #
-            #         loss =  loss_l1 + loss_mse + loss_corr
-                # except:
-                #     continue
-                #print(noise_pred_dti.shape)
-                # loss = F.l1_loss(noise_pred_dti, noise_dti.cuda().unsqueeze(1))
             if i in index_train and epoch % 100 == 0:
                 model.eval()
                 with torch.no_grad():
@@ -363,40 +319,8 @@ def train_epoch(epoch, fold_id, data_loader, model, criterion,\
             if i % writer_index == 0:
                 writer.add_scalar('train/loss', losses_log / (i + 1), i + (epoch - 1) * len(data_loader))
                 writer.add_scalar('train/lr', loss.detach().item(), i + (epoch - 1) * len(data_loader))
-                # fig, ax
-                # figure = plt.figure()
-                # plt.imshow(gen_smaple)
-                # plt.axis('off')
-                # plt.gca().xaxis.set_major_locator(plt.NullLocator())
-                # plt.gca().yaxis.set_major_locator(plt.NullLocator())
-                # writer.add_figure('train/gen_image', plt_image(gen_smaple), i + (epoch - 1) * len(data_loader))
-                # plt.close()
-                # writer.add_figure('train/gen_target_image', plt_image(gen_target_smaple), i + (epoch - 1) * len(data_loader))
-                # plt.close()
-                # writer.add_figure('train/sub_image', plt_image(sub_sample), i + (epoch - 1) * len(data_loader))
-                # plt.close()
-                # writer.add_figure('train/noise_image', plt_image(noise_smaple), i + epoch)
-                # plt.close()
-                # writer.add_figure('train/target_image', plt_image(target_smaple), i + (epoch - 1) * len(data_loader))
-                # plt.close()
         batch_time.update(time.time()-end_time)
         end_time = time.time()
-
-
-
-        # _, pred = outputs.topk(k=1, dim=1, largest=True)
-        # pred_arr = torch.cat([pred_arr, pred], dim=0)
-        # _, labels_ = labels.topk(k=1, dim=1, largest=True)
-        # labels_arr = torch.cat([labels_arr, labels_.cuda().squeeze()], dim=0)
-    # print('prediction :', end=' ')
-    # for i in range(4, len(pred_arr)):
-    #     print('%d\t'%(pred_arr[i]), end='')
-    # print('\nlabel    :', end=' ')
-    # for i in range(4, len(labels_arr)):
-    #     print('%d\t'%(labels_arr[i]), end='')
-    # print('\n')
-    # labels_arr = torch.empty(4).cuda()
-    # pred_arr = torch.empty(4, 1).cuda()
     try:
         epoch_logger.log({
             'epoch': epoch,
@@ -435,8 +359,6 @@ def train_epoch(epoch, fold_id, data_loader, model, criterion,\
                                       opt.category, str(fold_id), opt.features, opt.n_epochs))
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)
-            # if opt.pretrain ==True:
-            #     epoch_save = epoch +3
             save_path = OsJoin(save_dir,
                                '{}{}_weights_fold{}_epoch{}.pth'.format(opt.model_name, opt.model_depth,
                                                                                fold_id, epoch))
