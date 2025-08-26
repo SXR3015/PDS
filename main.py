@@ -167,28 +167,11 @@ def run(fold_id, opt):
         elif not opt.no_train and opt.refine == True:
             train_epoch_refine(i, fold_id, train_loader, model, criterion, opt,
                         train_logger, train_batch_logger, writer, optimizer)
-       # if not opt.no_val:
-       #     validation_loss = val_epoch(i,val_loader, model, criterion, opt, val_logger, writer,optimizer,\
-       #                                 global_step=global_step_,
-       #                 noise_scheduler_ =noise_schedul, \
-       #                                 scaler_=scaler, lr_scheduler_=lr_scheduler,\
-        #                Ema_=ema_, gamma_=gamma_)
         if not opt.no_train and not opt.no_val:
             lr = optimizer.param_groups[0]["lr"]
             writer.add_scalar('lr', lr, i)
         # global_step_ = global_step_ +1
     writer.close()
-    # test_data = TestSet()
-    # test_loader = torch.utils.data.DataLoader(test_data, batch_size = opt.batch_size, shuffle=False,
-    #                                                         num_workers = 0, pin_memory=True)
-    # if opt.mode_net == 'pretrained classifier' or opt.mode_net == 'region-specific':
-    #     test_logger = Logger(OsJoin(log_path, 'test.log'),
-    #                         ['epoch', 'loss', 'acc', 'recall', 'precision', 'f1', 'sensitivity', 'specificity'])
-    # elif opt.mode_net == 'image_generator':
-    #     test_logger = Logger(OsJoin(log_path, 'test.log'),
-    #                         ['epoch', 'loss_G', 'loss_D', 'acc', 'recall', 'precision', 'f1', 'sensitivity',
-    #                          'specificity'])
-    # test_epoch(1, test_loader, model, writer, fold_id, criterion, opt, test_logger)
     print('-'*47, 'FOLD %s FINISHED'%str(fold_id), '-'*48)
 
 
