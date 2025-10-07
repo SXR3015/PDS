@@ -35,7 +35,7 @@ python main.py
 This stage learns the core generative prior from paired multimodal data.
 
 #### 2. Run Refinement with Pretrained Weights
-After training, locate your best checkpoint (e.g., ./checkpoints/best_model.pth).
+After training, locate your best checkpoint **(e.g., ./checkpoints/best_model.pth**.
 
 * In opt.py, update:
 ```
@@ -54,16 +54,16 @@ To visualize or debug intermediate results during training:
 ```
 save_every = 100  # save samples every N iterations
 ```
-Generated images will be saved to the results/ directory by default.
+Generated images will be saved to the **results/ directory** by default.
 
 #### 4. Hyperparameter Configuration
-All configurable options are centralized in opt.py, including:
+All configurable options are centralized in **opt.py**, including:
 ```
 Learning rate, batch size, number of diffusion timesteps
 Model architecture settings (e.g., UNet depth, channel dimensions)
 Input image size: Adjust opt.image_size to match your data resolution
 ```
-📌 Note: Ensure opt.image_size matches your dataset. Mismatched dimensions will cause runtime errors.
+📌 Note: Ensure **opt.image_size** matches your dataset. Mismatched dimensions will cause runtime errors.
 
 ```
 📁 Project Structure
