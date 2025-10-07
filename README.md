@@ -18,8 +18,9 @@ PDS follows a two-stage training protocol:
 1. Train the Dual-Modal Diffusion Model
 Open opt.py and set:
 
+```python
 opt.refine = False
-
+```python
 Launch training:
 
 python main.py
