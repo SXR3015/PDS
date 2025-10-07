@@ -17,11 +17,13 @@ PDS follows a two-stage training protocol:
 
 1. Train the Dual-Modal Diffusion Model
 Open opt.py and set:
-python
+
 opt.refine = False
+
 Launch training:
-bash
+
 python main.py
+
 This stage learns the core generative prior from paired multimodal data.
 
 2. Run Refinement with Pretrained Weights
