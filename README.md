@@ -14,13 +14,13 @@ pip install -r requirements.txt
 
 💡 We recommend using a virtual environment (e.g., venv or conda) to avoid dependency conflicts.
 
-▶️ Running the Model
+### ▶️ Running the Model
 PDS follows a two-stage training protocol:
 
 ```bash
 opt.refine = False
 ```
-1. Train the Dual-Modal Diffusion Model
+#### 1. Train the Dual-Modal Diffusion Model
 Open opt.py and set:
 
 ```bash
@@ -34,26 +34,29 @@ python main.py
 
 This stage learns the core generative prior from paired multimodal data.
 
-2. Run Refinement with Pretrained Weights
+#### 2. Run Refinement with Pretrained Weights
 After training, locate your best checkpoint (e.g., ./checkpoints/best_model.pth).
-In opt.py, update:
-python
+
+* In opt.py, update:
+```
 opt.resume_path = "./checkpoints/best_model.pth"  # path to your trained weights
 opt.refine = True                                 # enable refinement mode
-Re-run:
+```
+* Re-run:
 bash
 python main.py
 The model will now load the pretrained diffusion backbone and perform refinement.
 
-3. Saving Intermediate Outputs
+#### 3. Saving Intermediate Outputs
 To visualize or debug intermediate results during training:
 
-Modify the logging frequency in train.py (Stage 1) or train_refine.py (Stage 2):
-python
+* Modify the logging frequency in train.py (Stage 1) or train_refine.py (Stage 2):
+```
 save_every = 100  # save samples every N iterations
+```
 Generated images will be saved to the results/ directory by default.
 
-4. Hyperparameter Configuration
+#### 4. Hyperparameter Configuration
 All configurable options are centralized in opt.py, including:
 ```
 Learning rate, batch size, number of diffusion timesteps
